@@ -7,14 +7,14 @@ const App = () => {
   return (
     <View>
       <Logo />
-      <Text style= {{ alignSelf: 'center', marginTop: 20, fontSize: 30 }}>Complainer</Text>
+      <Text style= {styles.text}>Complainer</Text>
       <TouchableOpacity>
-            <Text style = {styles.text}>
+            <Text style = {styles.button}>
                Login
             </Text>
       </TouchableOpacity>
       <TouchableOpacity>
-            <Text style = {styles.text}>
+            <Text style = {styles.button}>
                Sign Up
             </Text>
       </TouchableOpacity>
@@ -30,7 +30,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
+  text:{
+    alignSelf: 'center',
+    marginTop: 20,
+    fontSize: 30
+  },
+  button: {
     width: 100,
     textAlign: 'center',
     borderWidth: 0,
