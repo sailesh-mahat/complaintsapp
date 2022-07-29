@@ -8,10 +8,9 @@ const { Navigator, Screen } = createStackNavigator();
 
 const AppNavigator = () => (
     <NavigationContainer>
-        <Navigator headerMode="none" initialRouteName="Login">
-            <Screen name="Login" component={LoginScreen}></Screen>
-            <Screen name="Register" component={RegisterScreen}></Screen>
-
+        <Navigator initialRouteName="Login">
+            <Screen name="Login" component={LoginScreen} options={{ headerShown: false}}></Screen>
+            <Screen name="Register" component={RegisterScreen} options= {{ headerTintColor: 'white', headerStyle: { backgroundColor: "rgb(0, 92, 179)" }}}></Screen>
         </Navigator>
     </NavigationContainer>
 )

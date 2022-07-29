@@ -9,7 +9,6 @@ const RegisterScreen = () => {
     return (
         <SafeAreaView>
             <ScrollView>
-                <HeaderComponent title="Register"/>
                 <View style={registerStyle.content}>
                     <TextInput label="Name" />
                     <TextInput label="Email" keyboardType="email-address" />
