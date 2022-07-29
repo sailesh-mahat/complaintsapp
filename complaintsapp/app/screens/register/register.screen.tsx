@@ -4,12 +4,12 @@ import { Appbar, Button, TextInput } from "react-native-paper";
 import { HeaderComponent } from "../../components/header/header.component";
 import { registerStyle } from './register.style';
 
-export const RegisterScreen = () => {
+const RegisterScreen = () => {
 
     return (
         <SafeAreaView>
             <ScrollView>
-                <HeaderComponent title="Regsiter"/>
+                <HeaderComponent title="Register"/>
                 <View style={registerStyle.content}>
                     <TextInput label="Name" />
                     <TextInput label="Email" keyboardType="email-address" />
@@ -22,3 +22,5 @@ export const RegisterScreen = () => {
         </SafeAreaView>
     )
 }
+
+export default RegisterScreen;
