@@ -1,6 +1,7 @@
-import React from 'react';
-import { SafeAreaView, ScrollView, View } from 'react-native';
-import { Appbar, Button, TextInput } from "react-native-paper";
+import React, { useState } from 'react';
+import { GestureResponderEvent, SafeAreaView, ScrollView, View } from 'react-native';
+import { Appbar, Button, TextInput, List } from "react-native-paper";
+import DropdownComponent from '../../components/dropdown/dropdown.component';
 import { HeaderComponent } from "../../components/header/header.component";
 import { registerStyle } from './register.style';
 
@@ -15,6 +16,7 @@ const RegisterScreen = () => {
                     <TextInput label="Password" secureTextEntry={true} right={<TextInput.Icon name="eye-off-outline" color={registerStyle.icon.color } />} />
                     <TextInput label="Confirm password" secureTextEntry={true} right={<TextInput.Icon name="eye-off-outline" color={registerStyle.icon.color } />} />
                     <TextInput label="Phone number" keyboardType="phone-pad" />
+                    <DropdownComponent />
                     <Button mode="contained" style={registerStyle.button}>Register</Button>
                 </View>
             </ScrollView>
