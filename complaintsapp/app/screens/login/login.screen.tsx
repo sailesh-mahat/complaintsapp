@@ -1,6 +1,8 @@
+import { Formik } from 'formik';
 import React from 'react';
-import { Alert, SafeAreaView, View } from 'react-native';
+import { Alert, SafeAreaView, View, Text } from 'react-native';
 import { Button, Card, TextInput } from 'react-native-paper';
+import { loginForm } from './login.form';
 import { loginStyle } from './login.style';
 
 interface LoginScreenProps {
@@ -20,11 +22,19 @@ const LoginScreen = (props: LoginScreenProps) => {
                 <Card>
                     <Card.Title title="Complainer App" titleStyle={loginStyle.cardTitle}></Card.Title>
                     <Card.Content>
-                        <TextInput label="Email" keyboardType="email-address"></TextInput>
-                        <TextInput label="Password" secureTextEntry={true}></TextInput>
-                        <Button uppercase={false} style={loginStyle.cardButton}>Forgot Email/Password</Button>
-                        <Button onPress={login} mode="contained" style={loginStyle.cardButton}>Login</Button>
-                        <Button onPress={register} style={loginStyle.cardButton}>Register</Button>
+                        <Formik initialValues={{email: "", password: ""}} onSubmit={login} validationSchema ={loginForm}>
+                            {({handleSubmit, handleChange, errors}) => (
+                                <>
+                                <TextInput label="Email" keyboardType="email-address" onChangeText={handleChange('email')} />
+                                <Text style={{color: "white", backgroundColor: "red"}}> {errors.email} </Text>
+                                <TextInput label="Password" secureTextEntry={true} onChangeText={handleChange('password')} />
+                                <Button uppercase={false} style={loginStyle.cardButton}>Forgot Email/Password</Button>
+                                <Button onPress={handleSubmit} mode="contained" style={loginStyle.cardButton}>Login</Button>
+                                <Button onPress={register} style={loginStyle.cardButton}>Register</Button>
+                                </>
+                            )}
+                                
+                        </Formik>
                      </Card.Content>
                 </Card>
             </View>

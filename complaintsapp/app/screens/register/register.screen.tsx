@@ -11,7 +11,9 @@ interface RegisterScreenProps {
 
 const RegisterScreen = (props: RegisterScreenProps) => {
 
-    const register = () => props.navigation.navigate("Home")
+    const register = () => props.navigation.navigate("Login")
+   
+    
 
 
     return (
