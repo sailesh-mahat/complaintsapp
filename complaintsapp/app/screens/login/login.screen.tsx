@@ -1,12 +1,19 @@
+import { bindActionCreators } from '@reduxjs/toolkit';
 import { Formik } from 'formik';
 import React from 'react';
 import { Alert, SafeAreaView, View, Text, ScrollView } from 'react-native';
 import { Button, Card, TextInput } from 'react-native-paper';
+import { connect } from "react-redux";
+import { hide, show } from '../../store/loading/loading.actions';
+import { LoadingState } from '../../store/loading/loadingState';
 import { loginForm } from './login.form';
 import { loginStyle } from './login.style';
 
 interface LoginScreenProps {
+    loadingState: LoadingState;
     navigation: any;
+    hideLoading: Function;
+    showLoading: Function;
 }
 
 const LoginScreen = (props: LoginScreenProps) => {
@@ -14,6 +21,13 @@ const LoginScreen = (props: LoginScreenProps) => {
     const login = () => props.navigation.navigate("Home")
 
     const register = () => props.navigation.navigate("Register")
+
+    const forgotEmailPassword = () => {
+        props.showLoading();
+        setTimeout(() => {
+            props.hideLoading();
+        }, 3000)
+    }
 
 
     return (
@@ -51,6 +65,7 @@ const LoginScreen = (props: LoginScreenProps) => {
                                     :null
                                 }    
                                 <Button 
+                                    onPress={forgotEmailPassword}
                                     uppercase={false} 
                                     style={loginStyle.cardButton}
                                     disabled={values.email == '' || errors.email ? true : false}>
@@ -82,4 +97,14 @@ const LoginScreen = (props: LoginScreenProps) => {
     )
 }
 
-export default LoginScreen
+const mapStateToProps = (store: {loading: LoadingState}) => ({
+    loadingState: store.loading
+})
+const mapDispatchToProps = ( dispatch: any) => (
+    bindActionCreators({
+        hideLoading: hide,
+        showLoading: show
+    }, dispatch)
+)
+
+export default connect(mapStateToProps, mapDispatchToProps) (LoginScreen);
