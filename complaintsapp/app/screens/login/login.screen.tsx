@@ -1,34 +1,58 @@
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { Formik } from 'formik';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, SafeAreaView, View, Text, ScrollView } from 'react-native';
-import { Button, Card, TextInput } from 'react-native-paper';
+import { Button, Card, Snackbar, TextInput } from 'react-native-paper';
 import { connect } from "react-redux";
+import AuthService from '../../services/AuthService';
+import { AppState } from '../../store/AppState';
 import { hide, show } from '../../store/loading/loading.actions';
-import { LoadingState } from '../../store/loading/loadingState';
+import { LoadingState } from '../../store/loading/LoadingState';
+import { recoverPassword, recoverPasswordFail, recoverPasswordReset, recoverPasswordSuccess } from '../../store/login/login.actions';
+import { LoginState } from '../../store/login/LoginState';
 import { loginForm } from './login.form';
 import { loginStyle } from './login.style';
 
 interface LoginScreenProps {
-    loadingState: LoadingState;
     navigation: any;
+
+    loadingState: LoadingState;
+    loginState: LoginState;
+
+    recoverPassword: Function;
+    recoverPasswordReset: Function;
+    recoverPasswordSuccess: Function;
+    recoverPasswordFail: Function;
     hideLoading: Function;
     showLoading: Function;
 }
 
 const LoginScreen = (props: LoginScreenProps) => {
 
+    const [recoveryEmail, setRecoveryEmail] = useState("");
+
+    useEffect(() => {
+        if (props.loginState.isRecoveringPassword){
+            props.showLoading();
+
+            AuthService.recoverPassword(recoveryEmail).then(() => {
+                props.recoverPasswordSuccess();
+            }).catch(error => {
+                props.recoverPasswordFail(error);
+            })
+        } else { 
+            props.hideLoading();
+        }
+    }, [props.loginState.isRecoveringPassword])
+
+    const forgotEmailPassword = (email: string) => {
+        setRecoveryEmail(email);
+        props.recoverPassword();
+    };
+
     const login = () => props.navigation.navigate("Home")
 
     const register = () => props.navigation.navigate("Register")
-
-    const forgotEmailPassword = () => {
-        props.showLoading();
-        setTimeout(() => {
-            props.hideLoading();
-        }, 3000)
-    }
-
 
     return (
         <SafeAreaView style={loginStyle.content}>
@@ -65,7 +89,7 @@ const LoginScreen = (props: LoginScreenProps) => {
                                     :null
                                 }    
                                 <Button 
-                                    onPress={forgotEmailPassword}
+                                    onPress={() => forgotEmailPassword(values.email)}
                                     uppercase={false} 
                                     style={loginStyle.cardButton}
                                     disabled={values.email == '' || errors.email ? true : false}>
@@ -88,20 +112,44 @@ const LoginScreen = (props: LoginScreenProps) => {
                         </Formik>
                      </Card.Content>
                 </Card>
-
             </ScrollView>
-
-                
             </View>
+            {
+                props.loginState.isRecoveredPassword ?
+                <Snackbar 
+                    duration={5000}
+                    visible={true}
+                    onDismiss={() => props.recoverPasswordReset()}>
+                    Recovery email sent
+                </Snackbar>
+                : null
+            }
+            {
+                props.loginState.error ?
+                <Snackbar 
+                    duration={5000}
+                    visible={true}
+                    onDismiss={() => props.recoverPasswordReset()}>
+                    {props.loginState.error.message}
+                </Snackbar>
+                : null
+            }
+            
         </SafeAreaView>
     )
 }
 
-const mapStateToProps = (store: {loading: LoadingState}) => ({
-    loadingState: store.loading
-})
+const mapStateToProps = (store: AppState) => ({
+    loadingState: store.loading,
+    loginState: store.login
+});
+
 const mapDispatchToProps = ( dispatch: any) => (
     bindActionCreators({
+        recoverPassword: recoverPassword,
+        recoverPasswordSuccess: recoverPasswordSuccess,
+        recoverPasswordFail: recoverPasswordFail,
+        recoverPasswordReset: recoverPasswordReset,
         hideLoading: hide,
         showLoading: show
     }, dispatch)
